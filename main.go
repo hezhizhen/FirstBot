@@ -3,6 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
+	"regexp"
+	"strconv"
+	"time"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
@@ -38,13 +41,22 @@ func main() {
 			switch rmsg.Command() {
 			case "start":
 				txt = fmt.Sprintf("Welcome, %s", rmsg.From.UserName)
-			case "stop":
-				txt = fmt.Sprintf("Stop as you wish.")
+			case "countdown":
+				secondPattern := regexp.MustCompile(`[0-9]+`)
+				secondS := secondPattern.FindString(rmsg.Text)
+				second, err := strconv.Atoi(secondS)
+				if err != nil {
+					fmt.Println(err)
+					txt = fmt.Sprintf("fail to extract the interval")
+				} else {
+					time.Sleep(time.Second * time.Duration(second))
+					txt = fmt.Sprintf("Time is up!")
+				}
 			case "help":
 				txt = fmt.Sprintf(`Available commands:
 				- /start : start to use this bot
-				- /stop : stop using this bot
-				- /help : more info about this bot`)
+				- /countdown : enter the interval(unit:s) you would like to wait
+				- /help : more info of usage about this bot`)
 			default:
 				txt = fmt.Sprintf("Invalid command. Please enter /help for available commands")
 			}
