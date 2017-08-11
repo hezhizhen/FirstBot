@@ -50,6 +50,7 @@ func main() {
 					fmt.Println(err)
 					txt = fmt.Sprintf("格式输入错误哦。栗子：/countdown 10")
 				} else {
+					fmt.Println("Start to conutdown", second, "seconds.")
 					time.Sleep(time.Second * time.Duration(second))
 					txt = fmt.Sprintf("时间到啦!")
 				}
