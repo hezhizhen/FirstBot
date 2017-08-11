@@ -53,10 +53,16 @@ func main() {
 					time.Sleep(time.Second * time.Duration(second))
 					txt = fmt.Sprintf("时间到啦!")
 				}
+			case "time":
+				txt = fmt.Sprintf("现在是：%s", rmsg.Time().In(time.Local))
+			case "weather":
+				txt = fmt.Sprintf("当前地区的天气信息未知")
 			case "help":
 				txt = fmt.Sprintf(`可用指令:
 				- /start : 开始使用这个Bot
 				- /countdown : 倒计时
+				- /time: 现在几点了
+				- /weather: 今天的天气如何
 				- /help : 帮助信息`)
 			default:
 				txt = fmt.Sprintf("Invalid command. Please enter /help for available commands")
