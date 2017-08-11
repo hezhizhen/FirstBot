@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
@@ -47,25 +48,40 @@ func main() {
 				second, err := strconv.Atoi(secondS)
 				if err != nil {
 					fmt.Println(err)
-					txt = fmt.Sprintf("fail to extract the interval")
+					txt = fmt.Sprintf("格式输入错误哦。栗子：/countdown 10")
 				} else {
 					time.Sleep(time.Second * time.Duration(second))
-					txt = fmt.Sprintf("Time is up!")
+					txt = fmt.Sprintf("时间到啦!")
 				}
 			case "help":
-				txt = fmt.Sprintf(`Available commands:
-				- /start : start to use this bot
-				- /countdown : enter the interval(unit:s) you would like to wait
-				- /help : more info of usage about this bot`)
+				txt = fmt.Sprintf(`可用指令:
+				- /start : 开始使用这个Bot
+				- /countdown : 倒计时
+				- /help : 帮助信息`)
 			default:
 				txt = fmt.Sprintf("Invalid command. Please enter /help for available commands")
 			}
 		} else {
-			txt = "Your message has been received."
+			txt = classifyContent(rmsg.Text)
 		}
 
 		msg := tgbotapi.NewMessage(rmsg.Chat.ID, txt)
 		bot.Send(msg)
 		fmt.Printf("[%s] %s\n", bot.Self.UserName, msg.Text)
+	}
+}
+
+func classifyContent(s string) string {
+	switch {
+	case strings.Contains(s, "你好"): // greeting
+		return "你好呀！"
+	case strings.Contains(s, "Big Brother"): // Big Brother
+		return "Big Brother is watching you!"
+	case strings.Contains(s, "荤段子"): // dirty talk
+		return "你是王钊吗？"
+	case strings.Contains(s, "笑话"): // joke
+		return "诸葛亮通过标志重捕法发现巴蜀盛产孟获"
+	default:
+		return "你的来信已收到"
 	}
 }
